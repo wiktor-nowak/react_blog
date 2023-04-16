@@ -1,12 +1,22 @@
-import React from 'react'
+import { useContext, useState, useEffect } from 'react';
+import DataContext from './context/DataContext';
 import { Link } from 'react-router-dom';
 
-const Nav = ({search, setSearch}) => {
+const Nav = () => {
+  const [search, setSearch] = useState('');
+  const { posts, setSearchResults } = useContext(DataContext);
+
+  useEffect(() => {
+    const filteredResults = posts.filter(post =>
+      ((post.body).toLowerCase()).includes(search.toLowerCase())
+      || ((post.title).toLowerCase()).includes(search.toLowerCase()));
+      setSearchResults(filteredResults.reverse());
+  }, [posts, search])
+
   return (
     <nav className='Nav'>
         <form className='searchForm' onSubmit={(e) => e.preventDefault()}>
-          <label htmlFor='search'>Search Posts
-          </label>
+          <label htmlFor='search'>Search Posts</label>
           <input
             id="search"
             type="text"
